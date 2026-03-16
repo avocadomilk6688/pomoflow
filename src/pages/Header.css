@@ -1,0 +1,15 @@
+.header {
+    display: flex;
+    padding: 14px 40px;
+    justify-content: space-between;
+    align-items: center;
+    height: 100px;
+    background-color: #121212;
+    color: white;
+}
+
+.header h2 {
+    font-family: Montserrat;
+    font-size: 40px;
+    font-weight: bold;
+}
