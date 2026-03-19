@@ -1,0 +1,105 @@
+.home-page {
+    border-top: 1px solid white;
+    background-color: #121212;
+    color: white;
+    text-align: center;
+    min-height: 100vh;
+}
+
+.home-page h1 {
+    margin: 10px 100px;
+    font-family: monospace;
+    font-size: 30px;
+    line-height: 50px; 
+}
+
+.pomodoro-options {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 0px auto;
+    padding: 30px 48px;
+    border: 1px solid white;
+    width: 893px;
+    height: 500px;
+}
+
+.pomodoro-options .presets {
+    padding-left: 8px;
+    height: 40px;
+    width: 150px;
+    font-size: 18px;
+    background-color: #121212;
+    color: white;
+}
+
+p {
+    font-size: 18px;
+    font-family: Roboto;
+}
+
+/* Remove the arrow of number type input */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input {
+    background-color: #121212;
+    color: white;
+    border: none;
+    border-bottom: 1px solid white;
+    font-size: 18px;
+}
+
+input:focus {
+    outline: none;
+    border-bottom: 1px solid white;
+}
+
+.working-on{
+    margin-top: 30px;
+    width: 797px;
+    text-align: left;
+}
+
+.working-on input {
+    margin-top: 20px;
+    width: 797px;
+}
+
+.minutes-per-focus-session, .minutes-per-break, .no-of-pomodoros {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    width: 797px;
+    text-align: left;
+}
+
+.minutes-per-focus-session .ans, .minutes-per-break .ans {
+    display: flex;
+}
+
+
+.minutes-per-focus-session .ans input, .minutes-per-break .ans input {
+    width: 50px;
+}
+
+.start-button {
+    margin-top: 58px;
+    align-self: center;
+    width: 200px;
+    height: 70px;
+    font-size: 18px;
+    background-color: #121212;
+    color: white;
+    border: 1px solid white;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.start-button:hover {
+    background-color: white;
+    color: black;
+}
