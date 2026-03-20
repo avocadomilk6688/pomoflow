@@ -1,7 +1,10 @@
+import { useNavigate } from 'react-router';
 import './HomePage.css';
 import { Header } from "./Header"
 
 export function HomePage() {
+    const navigate = useNavigate();
+    
     return (
         <>
             <Header />
@@ -35,7 +38,9 @@ export function HomePage() {
                         <p>Number of pomodoros to complete</p>
                         <input type="number" />
                     </div>
-                    <button className="start-button">Start</button>
+                    <button className="start-button" onClick={() => {
+                        navigate('/timer');
+                    }}>Start</button>
                 </div>
             </div>
         </>

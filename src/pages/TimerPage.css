@@ -1,0 +1,86 @@
+.timer-page {
+    position: relative;
+    min-height: 79vh;
+}
+
+body {
+    background-color: #121212;
+}
+
+.timer-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 60px;
+}
+
+.timer-section h1 {
+    margin-bottom: 60px;
+    color: white;
+    font-size: 30px;
+    font-family: monospace;
+}
+
+.timer-container {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 50px;
+}
+
+.timer-container div {
+    width: 250px;
+    height: 250px;
+    border: none;
+    background-color: white;
+}
+
+.timer-container div p {
+    font-family: Inter;
+    color: black;
+    font-size: 128px;
+    text-align: center;
+    line-height: 250px;
+}
+
+.timer-container p {
+    color: white;
+    font-size: 128px;
+    line-height: 250px;
+}
+
+.timer-controlers {
+    display: flex;
+    gap: 10px;
+}
+
+.timer-controlers button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.timer-controlers button svg {
+    color: white;
+}
+
+.motivation-quote {
+    margin-top: 30px;
+    color: white;
+    font-family: Inter;
+    font-size: 18px;
+}
+
+.music-icon {
+    position: absolute;
+    bottom: 50px;
+    right: 50px;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.music-icon svg {
+    color: white;
+    height: 60px;
+    width: 60px;
+}

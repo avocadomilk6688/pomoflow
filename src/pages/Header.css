@@ -6,6 +6,7 @@
     height: 100px;
     background-color: #121212;
     color: white;
+    border-bottom: 1px solid white;
 }
 
 .header h2 {
