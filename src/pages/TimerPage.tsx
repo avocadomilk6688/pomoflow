@@ -1,5 +1,5 @@
 import './TimerPage.css';
-import { Pause, SkipForward, Square, Music } from 'lucide-react';
+import { Pause, Play, SkipForward, Square, Music } from 'lucide-react';
 import { Header } from "./Header";
 import { useEffect, useState } from 'react';
 
@@ -8,6 +8,25 @@ export function TimerPage({ formData }: { formData: any }) {
     const [isActive, setIsActive] = useState(true); // Auto-start
     const [isWorkMode, setIsWorkMode] = useState(true);
     const [currentPomo, setCurrentPomo] = useState(1);
+
+    const handleTooglePause = () => {
+        setIsActive(!isActive);
+    }
+
+    const handleSkip = () => {
+        const confirmSkip = window.confirm("Skip this session?");
+        if (confirmSkip) {
+            setSecondsLeft(0);
+        }
+    }
+
+    const handleStop = () => {
+        const confirmStop = window.confirm("Stop the timer? All progress will be lost.");
+        if (confirmStop) {
+            setIsActive(false);
+            setSecondsLeft(0);
+        }
+    }
 
     useEffect(() => {
         let interval: any = null;
@@ -70,13 +89,17 @@ export function TimerPage({ formData }: { formData: any }) {
                         </div>
                     </div>
                     <div className="timer-controlers">
-                        <button className="pause-button">
-                            <Pause></Pause>
+                        <button className="pause-button" onClick={handleTooglePause}>
+                            {isActive ? (
+                                <Pause></Pause>
+                            ) : (
+                                <Play></Play>
+                            )}
                         </button>
-                        <button className="skip-button">
+                        <button className="skip-button" onClick={handleSkip}>
                             <SkipForward></SkipForward>
                         </button>
-                        <button className="stop-button">
+                        <button className="stop-button" onClick={handleStop}>
                             <Square></Square>
                         </button>
                     </div>
