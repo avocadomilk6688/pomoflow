@@ -72,7 +72,7 @@ export function TimerPage({ formData }: { formData: any }) {
             transition: 'background-color 2s ease-in-out',
             minHeight: '100vh'
         }}>
-            <Header />
+            <Header bgColor={aiData.color}/>
             <div className="timer-section">
                 <h1>{formData.task || "PomoFlow Session"}</h1>
 

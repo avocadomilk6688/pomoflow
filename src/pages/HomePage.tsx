@@ -15,7 +15,7 @@ export function HomePage( {formData, setFormData} : { formData: any, setFormData
 
     return (
         <>
-            <Header />
+            <Header bgColor = "#121212" />
             <div className="home-page">
                 <h1>PomoFlow — An AI-powered Pomodoro timer designed to curate your atmosphere, generate motivation, and analyze your flow.</h1>
                 <div className="pomodoro-options">
