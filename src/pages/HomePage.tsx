@@ -1,8 +1,9 @@
 import { useNavigate } from 'react-router';
 import './HomePage.css';
 import { Header } from "./Header"
+import type { User } from 'firebase/auth';
 
-export function HomePage( {formData, setFormData} : { formData: any, setFormData: any }) {
+export function HomePage( { user, formData, setFormData }: { user: User | null, formData: any, setFormData: any }) {
     const navigate = useNavigate();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -15,7 +16,7 @@ export function HomePage( {formData, setFormData} : { formData: any, setFormData
 
     return (
         <>
-            <Header bgColor = "#121212" />
+            <Header bgColor = "#121212" user={user} />
             <div className="home-page">
                 <h1>PomoFlow — An AI-powered Pomodoro timer designed to curate your atmosphere, generate motivation, and analyze your flow.</h1>
                 <div className="pomodoro-options">

@@ -9,7 +9,7 @@
     margin: 10px 100px;
     font-family: monospace;
     font-size: 30px;
-    line-height: 50px; 
+    line-height: 50px;
 }
 
 .pomodoro-options {
@@ -40,8 +40,8 @@ p {
 /* Remove the arrow of number type input */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+    -webkit-appearance: none;
+    margin: 0;
 }
 
 input {
@@ -57,7 +57,7 @@ input:focus {
     border-bottom: 1px solid white;
 }
 
-.working-on{
+.working-on {
     margin-top: 30px;
     width: 797px;
     text-align: left;
@@ -68,7 +68,9 @@ input:focus {
     width: 797px;
 }
 
-.minutes-per-focus-session, .minutes-per-break, .no-of-pomodoros {
+.minutes-per-focus-session,
+.minutes-per-break,
+.no-of-pomodoros {
     display: flex;
     justify-content: space-between;
     margin-top: 30px;
@@ -76,12 +78,14 @@ input:focus {
     text-align: left;
 }
 
-.minutes-per-focus-session .ans, .minutes-per-break .ans {
+.minutes-per-focus-session .ans,
+.minutes-per-break .ans {
     display: flex;
 }
 
 
-.minutes-per-focus-session .ans input, .minutes-per-break .ans input {
+.minutes-per-focus-session .ans input,
+.minutes-per-break .ans input {
     width: 50px;
 }
 

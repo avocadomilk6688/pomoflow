@@ -4,8 +4,9 @@ import { Header } from "./Header";
 import { useEffect, useState } from 'react';
 import { getAiAdvice } from '../utils/geminiApi';
 import { useNavigate } from 'react-router';
+import type { User } from 'firebase/auth';
 
-export function TimerPage({ formData }: { formData: any }) {
+export function TimerPage({ user, formData }: { user: User | null, formData: any }) {
     const navigate = useNavigate();
 
     const [secondsLeft, setSecondsLeft] = useState(Number(formData.workTime * 60));
@@ -72,7 +73,7 @@ export function TimerPage({ formData }: { formData: any }) {
             transition: 'background-color 2s ease-in-out',
             minHeight: '100vh'
         }}>
-            <Header bgColor={aiData.color}/>
+            <Header bgColor={aiData.color} user={user} />
             <div className="timer-section">
                 <h1>{formData.task || "PomoFlow Session"}</h1>
 

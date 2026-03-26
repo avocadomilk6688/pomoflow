@@ -14,3 +14,39 @@
     font-size: 40px;
     font-weight: bold;
 }
+
+.header-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.header-buttons button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.header-buttons button svg {
+    color: white;
+}
+
+.user-container {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.logout-box {
+    position: absolute;
+    width: 100px;
+    height: 40px;
+    background-color: white;
+    color: black;
+    font-family: Inter;
+    text-align: center;
+    line-height: 40px;
+    cursor: pointer;
+    top: 30px;
+    right: 0px;
+    z-index: 999;
+}
