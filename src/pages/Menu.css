@@ -1,0 +1,142 @@
+.menu {
+    display: flex;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    width: 1200px;
+    height: 500px;
+    background-color: #121212;
+    border: 1px solid white;
+    font-family: Inter;
+}
+
+.menu .close-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    cursor: pointer;
+}
+
+.menu-bar {
+    width: 230px;
+    border-right: 1px solid white;
+    font-size: 18px;
+}
+
+.menu-bar ul {
+    display: flex;
+    flex-direction: column;
+    margin-top: 65px;
+    gap: 30px;
+    align-items: center;
+}
+
+.menu-bar ul li {
+    list-style: none;
+    cursor: pointer;
+}
+
+.menu-bar ul hr {
+    width: 150px;
+}
+
+.presets-container {
+    display: flex;
+    flex-direction: column;
+    padding: 62px 45px;
+    gap: 20px;
+}
+
+.presets-container .add-button {
+    align-self: flex-end;
+    background-color: #121212;
+    color: white;
+    border: 1px solid white;
+    width: 211px;
+    height: 60px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.presets-container .add-button:hover {
+    background-color: white;
+    color: black;
+}
+
+.preset {
+    padding: 12px 20px;
+    border: 1px solid white;
+    width: 870px;
+    height: 120px;
+}
+
+.preset h2 {
+    font-size: 18px;
+    font-weight: normal;
+    font-family: Inter;
+}
+
+.details {
+    display: flex;
+    margin-top: 28px;
+    justify-content: space-between;
+    font-size: 18px;
+}
+
+.details input {
+    width: 50px;
+    text-align: center;
+}
+
+.details .delete-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.details .delete-button svg {
+    color: white;
+}
+
+.settings {
+    display: flex;
+    flex-direction: column;
+    gap: 29px;
+    padding: 76px 58px;
+    font-size: 18px;
+}
+
+.setting {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 850px;
+}
+
+.setting input {
+    width: 50px;
+    text-align: center;
+}
+
+.setting button {
+    background-color: #121212;
+    border: 1px solid white;
+    color: white;
+    height: 35px;
+    width: 65px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.setting .active-button {
+    background-color: white;
+    border: 1px solid white;
+    color: black;
+    height: 35px;
+    width: 65px;
+    font-size: 18px;
+    cursor: pointer;
+}
