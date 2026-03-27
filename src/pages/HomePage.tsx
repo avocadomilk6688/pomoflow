@@ -3,28 +3,32 @@ import './HomePage.css';
 import { Header } from "./Header"
 import type { User } from 'firebase/auth';
 
-export function HomePage( { user, formData, setFormData }: { user: User | null, formData: any, setFormData: any }) {
+export function HomePage({ user, formData, setFormData }: { user: User | null, formData: any, setFormData: any }) {
     const navigate = useNavigate();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData((prev: any) => ({
             ...prev,
-            [name] : value
+            [name]: value
         }));
     }
 
     return (
         <>
-            <Header bgColor = "#121212" user={user} />
+            <Header bgColor="#121212" user={user} />
             <div className="home-page">
                 <h1>PomoFlow — An AI-powered Pomodoro timer designed to curate your atmosphere, generate motivation, and analyze your flow.</h1>
                 <div className="pomodoro-options">
-                    <select className="presets" name="preset" id="presets" value={formData.preset} onChange={handleChange}>
-                        <option value="coding">Coding</option>
-                        <option value="do-math">Do maths</option>
-                        <option value="knitting">Knitting</option>
-                    </select>
+                    {user ? (
+                        <select className="presets" name="preset" id="presets" value={formData.preset} onChange={handleChange}>
+                            <option value="coding">Coding</option>
+                            <option value="do-math">Do maths</option>
+                            <option value="knitting">Knitting</option>
+                        </select>
+                    ) : (
+                        <h3>Sign in to create and manage your own custom session presets.</h3>
+                    )}
                     <div className="working-on">
                         <p>What are you working on?</p>
                         <input type="text" name="task" value={formData.task} onChange={handleChange} />
