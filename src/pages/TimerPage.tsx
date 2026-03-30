@@ -5,27 +5,41 @@ import { useEffect, useState } from 'react';
 import { getAiAdvice } from '../utils/geminiApi';
 import { useNavigate } from 'react-router';
 import type { User } from 'firebase/auth';
+import { useAudio } from '../hooks/useAudio';
 
 export function TimerPage({ user, formData }: { user: User | null, formData: any }) {
     const navigate = useNavigate();
+
+    const { playSound, stopSound } = useAudio();
 
     const [secondsLeft, setSecondsLeft] = useState(Number(formData.workTime * 60));
     const [isActive, setIsActive] = useState(true);
     const [isWorkMode, setIsWorkMode] = useState(true);
     const [currentPomo, setCurrentPomo] = useState(1);
-    const [aiData, setAiData] = useState({ quote: "Architecting focus...", color: "#1e1e2e" });
+    const [aiData, setAiData] = useState({ quote: "Architecting focus...", color: "#1e1e2e", sound: 'Rain' });
 
     useEffect(() => {
         const fetchAi = async () => {
             try {
                 const data = await getAiAdvice(formData.task, isWorkMode);
                 setAiData(data);
+                if (isActive) {
+                    playSound(data.sound);
+                }
             } catch (e) { console.error(e); }
         };
         fetchAi();
         const aiInterval = setInterval(fetchAi, 300000); // 5-minute refresh
         return () => clearInterval(aiInterval);
-    }, [isWorkMode, formData.task, formData.preset]);
+    }, [isWorkMode, formData.task]);
+
+    useEffect(() => {
+        if (isActive) {
+            playSound(aiData.sound);
+        } else {
+            stopSound();
+        }
+    }, [isActive])
 
     useEffect(() => {
         let interval: any = null;
@@ -45,6 +59,7 @@ export function TimerPage({ user, formData }: { user: User | null, formData: any
         }
 
         const handleSessionSwitch = () => {
+            stopSound();
             if (isWorkMode) {
                 alert("Focus session over! Time for a break.");
                 setIsWorkMode(false);
@@ -99,7 +114,7 @@ export function TimerPage({ user, formData }: { user: User | null, formData: any
                     <p className="motivation-quote">"{aiData.quote}"</p>
                 </div>
 
-                <button className="music-icon"><Music /></button>
+                <button className="music-icon" onClick={() => isActive ? stopSound() : playSound(aiData.sound)}><Music /></button>
             </div>
         </div>
     );

@@ -1,10 +1,10 @@
-
 import './Header.css';
 import './Menu.css';
 import GoogleButtonImport from 'react-google-button';
 import { loginWithGoogle, logout } from '../firebase';
 import { Menu, UserCircle, Trash2, X } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { fetchPresets } from '../utils/firestore';
 
 const GoogleButton = (GoogleButtonImport as any).default || GoogleButtonImport;
 
@@ -15,6 +15,20 @@ export function Header({ user, bgColor = "#121212" }: { user: any, bgColor?: str
     const [isAutoStart, setIsAutoStart] = useState(true);
     const [isAutoResume, setIsAutoResume] = useState(true);
     const [isAddPresetPressed, setIsAddPresetPressed] = useState(false);
+    const [presets, setPresets] = useState<any[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        if (isMenuVisible && isPresetsVisible && user?.uid) {
+            const getPresets = async () => {
+                setIsLoading(true);
+                const data = await fetchPresets(user.uid);
+                setPresets(data);
+                setIsLoading(false);
+            };
+            getPresets();
+        }
+    }, [isMenuVisible, isPresetsVisible, user?.uid]);
 
     const handleLogout = async () => {
         await logout();
@@ -51,7 +65,7 @@ export function Header({ user, bgColor = "#121212" }: { user: any, bgColor?: str
             }
             {isMenuVisible && (
                 <div className="menu">
-                    <div className="close-button">
+                    <div className="close-button" onClick={() => setIsMenuVisible(false)}>
                         <X></X>
                     </div>
                     <div className="menu-bar">
@@ -69,7 +83,7 @@ export function Header({ user, bgColor = "#121212" }: { user: any, bgColor?: str
                                 }}>Add preset</button>
                                 {isAddPresetPressed && (
                                     <div className="preset">
-                                        <h2>Coding</h2>
+                                        <input type="text" className="preset-name" />
                                         <div className="details">
                                             <div className="input-group">
                                                 <label htmlFor="">Work interval: </label>
@@ -91,35 +105,43 @@ export function Header({ user, bgColor = "#121212" }: { user: any, bgColor?: str
                                         </div>
                                     </div>
                                 )}
-                                <div className="preset">
-                                    <h2>Coding</h2>
-                                    <div className="details">
-                                        <div className="input-group">
-                                            <label htmlFor="">Work interval: </label>
-                                            <input type="number" value="50" />
-                                            <span>mins</span>
+                                {isLoading ? (
+                                    <p className="loading-text">Loading your flow</p>
+                                ) : presets.length > 0 ? (
+                                    presets.map((p) => (
+                                        <div className="preset" key={p.id}>
+                                            <input type="text" className="preset-name" value={p.name} />
+                                            <div className="details">
+                                                <div className="input-group">
+                                                    <label htmlFor="">Work interval: </label>
+                                                    <input type="number" value={p.workTime} readOnly />
+                                                    <span>mins</span>
+                                                </div>
+                                                <div className="input-group">
+                                                    <label htmlFor="">Break: </label>
+                                                    <input type="number" value={p.breakTime} readOnly />
+                                                    <span>mins</span>
+                                                </div>
+                                                <div className="input-group">
+                                                    <label htmlFor="">Cycles: </label>
+                                                    <input type="number" value={p.pomoCount} readOnly />
+                                                </div>
+                                                <button className='delete-button'>
+                                                    <Trash2></Trash2>
+                                                </button>
+                                            </div>
                                         </div>
-                                        <div className="input-group">
-                                            <label htmlFor="">Break: </label>
-                                            <input type="number" value="15" />
-                                            <span>mins</span>
-                                        </div>
-                                        <div className="input-group">
-                                            <label htmlFor="">Cycles: </label>
-                                            <input type="number" value="3" />
-                                        </div>
-                                        <button className='delete-button'>
-                                            <Trash2></Trash2>
-                                        </button>
-                                    </div>
-                                </div>
+                                    ))
+                                ) : (
+                                    <p>No presets found.</p>
+                                )}
                             </div>
                         ) : (
                             <div className="settings">
                                 <div className="setting">
                                     <label htmlFor="">How often should the motivational quote refresh? </label>
                                     <div className="ans">
-                                        <input type="number" value="5" />
+                                        <input type="number" defaultValue="5" />
                                         <span>mins</span>
                                     </div>
                                 </div>
