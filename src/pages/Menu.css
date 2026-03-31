@@ -103,6 +103,16 @@
     color: white;
 }
 
+.details .save-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.details .save-button svg {
+    color: white;
+}
+
 .settings {
     display: flex;
     flex-direction: column;

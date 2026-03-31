@@ -1,5 +1,5 @@
 import { db } from "../firebase";
-import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import { collection, getDocs, addDoc, query, orderBy } from "firebase/firestore";
 
 export const fetchPresets = async (userId: string) => {
     try {
@@ -18,3 +18,15 @@ export const fetchPresets = async (userId: string) => {
         return [];
     }
 };
+
+export const logPresets = async (userId: string, data: any) => {
+    try {
+        const presetsRef = collection(db, "users", userId, "presets")
+
+        const docRef = await addDoc(presetsRef, data);
+
+        console.log("Preset logged with ID: ", docRef.id);
+    } catch (error) {
+        console.error(error);
+    }
+}

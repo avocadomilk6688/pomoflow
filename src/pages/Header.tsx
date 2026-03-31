@@ -2,9 +2,9 @@ import './Header.css';
 import './Menu.css';
 import GoogleButtonImport from 'react-google-button';
 import { loginWithGoogle, logout } from '../firebase';
-import { Menu, UserCircle, Trash2, X } from 'lucide-react';
+import { Menu, UserCircle, Trash2, X, Save } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { fetchPresets } from '../utils/firestore';
+import { fetchPresets, logPresets } from '../utils/firestore';
 
 const GoogleButton = (GoogleButtonImport as any).default || GoogleButtonImport;
 
@@ -17,6 +17,26 @@ export function Header({ user, bgColor = "#121212" }: { user: any, bgColor?: str
     const [isAddPresetPressed, setIsAddPresetPressed] = useState(false);
     const [presets, setPresets] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [draftPreset, setDraftPreset] = useState({
+        name: "",
+        workTime: 25,
+        breakTime: 5,
+        pomoCount: 4
+    });
+
+    const handleSaveNewPreset = async () => {
+        if (!user?.uid || !draftPreset.name) return;
+
+        setIsLoading(true);
+        await logPresets(user.uid, draftPreset);
+
+        const freshData = await fetchPresets(user.uid);
+        setPresets(freshData);
+
+        setIsAddPresetPressed(false);
+        setIsLoading(false);
+        setDraftPreset({ name: "", workTime: 25, breakTime: 5, pomoCount: 4 });
+    };
 
     useEffect(() => {
         if (isMenuVisible && isPresetsVisible && user?.uid) {
@@ -83,24 +103,28 @@ export function Header({ user, bgColor = "#121212" }: { user: any, bgColor?: str
                                 }}>Add preset</button>
                                 {isAddPresetPressed && (
                                     <div className="preset">
-                                        <input type="text" className="preset-name" />
+                                        <input type="text" className="preset-name" value={draftPreset.name}
+                                            onChange={(e) => setDraftPreset({ ...draftPreset, name: e.target.value })} />
                                         <div className="details">
                                             <div className="input-group">
                                                 <label htmlFor="">Work interval: </label>
-                                                <input type="number" />
+                                                <input type="number" value={draftPreset.workTime}
+                                                    onChange={(e) => setDraftPreset({ ...draftPreset, workTime: Number(e.target.value) })} />
                                                 <span>mins</span>
                                             </div>
                                             <div className="input-group">
                                                 <label htmlFor="">Break: </label>
-                                                <input type="number" />
+                                                <input type="number" value={draftPreset.breakTime}
+                                                    onChange={(e) => setDraftPreset({ ...draftPreset, breakTime: Number(e.target.value) })} />
                                                 <span>mins</span>
                                             </div>
                                             <div className="input-group">
                                                 <label htmlFor="">Cycles: </label>
-                                                <input type="number" />
+                                                <input type="number" value={draftPreset.pomoCount}
+                                                    onChange={(e) => setDraftPreset({ ...draftPreset, pomoCount: Number(e.target.value) })} />
                                             </div>
-                                            <button className='delete-button'>
-                                                <Trash2></Trash2>
+                                            <button className='save-button' onClick={handleSaveNewPreset}>
+                                                <Save></Save>
                                             </button>
                                         </div>
                                     </div>
@@ -110,7 +134,7 @@ export function Header({ user, bgColor = "#121212" }: { user: any, bgColor?: str
                                 ) : presets.length > 0 ? (
                                     presets.map((p) => (
                                         <div className="preset" key={p.id}>
-                                            <input type="text" className="preset-name" value={p.name} />
+                                            <input type="text" className="preset-name" value={p.name} readOnly />
                                             <div className="details">
                                                 <div className="input-group">
                                                     <label htmlFor="">Work interval: </label>
