@@ -1,18 +1,49 @@
 import { useNavigate } from 'react-router';
+import { useState, useEffect } from 'react';
 import './HomePage.css';
 import { Header } from "./Header"
 import type { User } from 'firebase/auth';
+import { fetchPresets } from '../utils/firestore';
 
 export function HomePage({ user, formData, setFormData }: { user: User | null, formData: any, setFormData: any }) {
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false);
+    const [presets, setPresets] = useState<any[]>([]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
+
+        if (name === "preset") {
+            const selectedPreset = presets.find(p => p.id === value);
+
+            if (selectedPreset) {
+                setFormData((prev: any) => ({
+                    ...prev,
+                    preset: value,
+                    workTime: selectedPreset.workTime,
+                    breakTime: selectedPreset.breakTime,
+                    pomoCount: selectedPreset.pomoCount,
+                }));
+                return;
+            }
+        }
         setFormData((prev: any) => ({
             ...prev,
             [name]: value
         }));
     }
+
+    useEffect(() => {
+        if (user?.uid) {
+            const getPresets = async () => {
+                setIsLoading(true);
+                const data = await fetchPresets(user.uid);
+                setPresets(data);
+                setIsLoading(false);
+            };
+            getPresets();
+        }
+    }, [user?.uid]);
 
     return (
         <>
@@ -22,9 +53,9 @@ export function HomePage({ user, formData, setFormData }: { user: User | null, f
                 <div className="pomodoro-options">
                     {user ? (
                         <select className="presets" name="preset" id="presets" value={formData.preset} onChange={handleChange}>
-                            <option value="coding">Coding</option>
-                            <option value="do-math">Do maths</option>
-                            <option value="knitting">Knitting</option>
+                            {presets.map((p) => (
+                                <option key={p.id} value={p.id}>{p.name}</option>
+                            ))}
                         </select>
                     ) : (
                         <h3>Sign in to create and manage your own custom session presets.</h3>
