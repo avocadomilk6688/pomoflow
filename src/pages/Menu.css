@@ -94,6 +94,11 @@
     text-align: center;
 }
 
+.details .preset-buttons {
+    display: flex;
+    gap: 5px;
+}
+
 .details .delete-button {
     background: none;
     border: none;
@@ -101,6 +106,16 @@
 }
 
 .details .delete-button svg {
+    color: white;
+}
+
+.details .edit-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.details .edit-button svg {
     color: white;
 }
 
