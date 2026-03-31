@@ -4,7 +4,7 @@ import GoogleButtonImport from 'react-google-button';
 import { loginWithGoogle, logout } from '../firebase';
 import { Menu, UserCircle, Trash2, X, Save } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { fetchPresets, logPresets } from '../utils/firestore';
+import { fetchPresets, logPresets, deletePreset } from '../utils/firestore';
 
 const GoogleButton = (GoogleButtonImport as any).default || GoogleButtonImport;
 
@@ -37,6 +37,20 @@ export function Header({ user, bgColor = "#121212" }: { user: any, bgColor?: str
         setIsLoading(false);
         setDraftPreset({ name: "", workTime: 25, breakTime: 5, pomoCount: 4 });
     };
+
+    const handleDeletePreset = async (presetId: string) => {
+        if (!user.uid) return;
+
+        const confirmDelete = window.confirm("Are you sure you want to delete this preset?")
+        if (!confirmDelete) return;
+
+        try {
+            await deletePreset(user.uid, presetId);
+            setPresets((prevPresets) => prevPresets.filter(p => p.id !== presetId));
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     useEffect(() => {
         if (isMenuVisible && isPresetsVisible && user?.uid) {
@@ -150,7 +164,7 @@ export function Header({ user, bgColor = "#121212" }: { user: any, bgColor?: str
                                                     <label htmlFor="">Cycles: </label>
                                                     <input type="number" value={p.pomoCount} readOnly />
                                                 </div>
-                                                <button className='delete-button'>
+                                                <button className='delete-button' onClick={() => handleDeletePreset(p.id)} >
                                                     <Trash2></Trash2>
                                                 </button>
                                             </div>
