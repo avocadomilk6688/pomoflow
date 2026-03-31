@@ -20,6 +20,7 @@ export function HomePage({ user, formData, setFormData }: { user: User | null, f
                 setFormData((prev: any) => ({
                     ...prev,
                     preset: value,
+                    task: selectedPreset.name,
                     workTime: selectedPreset.workTime,
                     breakTime: selectedPreset.breakTime,
                     pomoCount: selectedPreset.pomoCount,
