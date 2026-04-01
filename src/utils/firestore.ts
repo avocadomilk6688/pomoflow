@@ -1,5 +1,5 @@
 import { db } from "../firebase";
-import { collection, getDocs, addDoc, doc, deleteDoc, updateDoc, query, orderBy } from "firebase/firestore";
+import { collection, getDoc, getDocs, setDoc, addDoc, doc, deleteDoc, updateDoc, query, orderBy } from "firebase/firestore";
 
 export const fetchPresets = async (userId: string) => {
     try {
@@ -50,3 +50,14 @@ export const updatePreset = async (userId: string, presetId: string, updatedData
         throw error;
     }
 }
+
+export const updateUserSettings = async (userId: string, settings: any) => {
+    const settingsRef = doc(db, "users", userId, "settings", "timerConfig");
+    await setDoc(settingsRef, settings, { merge: true });
+};
+
+export const fetchUserSettings = async (userId: string) => {
+    const settingsRef = doc(db, "users", userId, "settings", "timerConfig");
+    const snap = await getDoc(settingsRef);
+    return snap.exists() ? snap.data() : null;
+};

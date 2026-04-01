@@ -4,11 +4,29 @@ import GoogleButtonImport from 'react-google-button';
 import { loginWithGoogle, logout } from '../firebase';
 import { Menu, UserCircle, Trash2, X, Save, Pen } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { fetchPresets, logPresets, deletePreset, updatePreset } from '../utils/firestore';
+import { fetchPresets, logPresets, deletePreset, updatePreset, updateUserSettings } from '../utils/firestore';
 
 const GoogleButton = (GoogleButtonImport as any).default || GoogleButtonImport;
 
-export function Header({ user, bgColor = "#121212" }: { user: any, bgColor?: string }) {
+export function Header({ 
+    user, 
+    bgColor = "#121212",
+    refreshTime,
+    setRefreshTime,
+    isAutoStart,
+    setIsAutoStart,
+    isAutoResume,
+    setIsAutoResume
+}: { 
+    user: any, 
+    bgColor?: string,
+    refreshTime: number,
+    setRefreshTime: any,
+    isAutoStart: boolean,
+    setIsAutoStart: any,
+    isAutoResume: boolean,
+    setIsAutoResume: any
+}) {
     const [isLogoutVisible, setIsLogoutVisible] = useState(false);
     const [isMenuVisible, setIsMenuVisible] = useState(false);
     const [isPresetsVisible, setIsPresetsVisible] = useState(true);
@@ -23,9 +41,6 @@ export function Header({ user, bgColor = "#121212" }: { user: any, bgColor?: str
         pomoCount: 4
     });
 
-    const [isAutoStart, setIsAutoStart] = useState(true);
-    const [isAutoResume, setIsAutoResume] = useState(true);
-
     useEffect(() => {
         if (isMenuVisible && isPresetsVisible && user?.uid) {
             const getPresets = async () => {
@@ -37,6 +52,23 @@ export function Header({ user, bgColor = "#121212" }: { user: any, bgColor?: str
             getPresets();
         }
     }, [isMenuVisible, isPresetsVisible, user?.uid]);
+
+    // HANDLER FOR CLOUD SYNCING SETTINGS
+    const handleSettingChange = async (field: string, value: any) => {
+        // Update local state for instant UI feedback
+        if (field === 'refreshTime') setRefreshTime(value);
+        if (field === 'isAutoStart') setIsAutoStart(value);
+        if (field === 'isAutoResume') setIsAutoResume(value);
+
+        // Save to Firestore
+        if (user?.uid) {
+            try {
+                await updateUserSettings(user.uid, { [field]: value });
+            } catch (err) {
+                console.error("Failed to save setting to cloud:", err);
+            }
+        }
+    };
 
     const handleSaveNewPreset = async () => {
         if (!user?.uid || !draftPreset.name) return;
@@ -98,7 +130,7 @@ export function Header({ user, bgColor = "#121212" }: { user: any, bgColor?: str
     return (
         <div className="header" style={{ backgroundColor: bgColor, transition: 'background-color 2.5s ease-in-out' }}>
             <h2>PomoFlow</h2>
-            
+
             {!user ? (
                 <GoogleButton type="light" onClick={loginWithGoogle} />
             ) : (
@@ -122,7 +154,7 @@ export function Header({ user, bgColor = "#121212" }: { user: any, bgColor?: str
                     <div className="close-button" onClick={() => setIsMenuVisible(false)}>
                         <X />
                     </div>
-                    
+
                     <div className="menu-bar">
                         <ul>
                             <li className={isPresetsVisible ? "active" : ""} onClick={() => setIsPresetsVisible(true)}>Presets</li>
@@ -139,27 +171,29 @@ export function Header({ user, bgColor = "#121212" }: { user: any, bgColor?: str
 
                             {isAddPresetPressed && (
                                 <div className="preset add-mode">
-                                    <input 
-                                        type="text" 
-                                        className="preset-name" 
+                                    <input
+                                        type="text"
+                                        className="preset-name"
                                         placeholder="Preset Name"
                                         value={draftPreset.name}
-                                        onChange={(e) => setDraftPreset({ ...draftPreset, name: e.target.value })} 
+                                        onChange={(e) => setDraftPreset({ ...draftPreset, name: e.target.value })}
                                     />
                                     <div className="details">
                                         <div className="input-group">
                                             <label>Work: </label>
                                             <input type="number" value={draftPreset.workTime} onChange={(e) => setDraftPreset({ ...draftPreset, workTime: Number(e.target.value) })} />
+                                            <span>mins</span>
                                         </div>
                                         <div className="input-group">
                                             <label>Break: </label>
                                             <input type="number" value={draftPreset.breakTime} onChange={(e) => setDraftPreset({ ...draftPreset, breakTime: Number(e.target.value) })} />
+                                            <span>mins</span>
                                         </div>
                                         <div className="input-group">
                                             <label>Cycles: </label>
                                             <input type="number" value={draftPreset.pomoCount} onChange={(e) => setDraftPreset({ ...draftPreset, pomoCount: Number(e.target.value) })} />
                                         </div>
-                                        <button className='save-button' onClick={handleSaveNewPreset}><Save/></button>
+                                        <button className='save-button' onClick={handleSaveNewPreset}><Save size={18} /></button>
                                     </div>
                                 </div>
                             )}
@@ -171,53 +205,55 @@ export function Header({ user, bgColor = "#121212" }: { user: any, bgColor?: str
                                     const isEditing = editingId === p.id;
                                     return (
                                         <div className="preset" key={p.id}>
-                                            <input 
-                                                type="text" 
-                                                className="preset-name" 
-                                                value={p.name} 
-                                                readOnly={!isEditing} 
+                                            <input
+                                                type="text"
+                                                className="preset-name"
+                                                value={p.name}
+                                                readOnly={!isEditing}
                                                 onChange={(e) => handleEditInputChange(p.id, "name", e.target.value)}
                                             />
                                             <div className="details">
                                                 <div className="input-group">
                                                     <label>Work: </label>
-                                                    <input 
-                                                        type="number" 
-                                                        value={p.workTime} 
-                                                        readOnly={!isEditing} 
+                                                    <input
+                                                        type="number"
+                                                        value={p.workTime}
+                                                        readOnly={!isEditing}
                                                         onChange={(e) => handleEditInputChange(p.id, "workTime", Number(e.target.value))}
                                                     />
+                                                    <span>mins</span>
                                                 </div>
                                                 <div className="input-group">
                                                     <label>Break: </label>
-                                                    <input 
-                                                        type="number" 
-                                                        value={p.breakTime} 
-                                                        readOnly={!isEditing} 
+                                                    <input
+                                                        type="number"
+                                                        value={p.breakTime}
+                                                        readOnly={!isEditing}
                                                         onChange={(e) => handleEditInputChange(p.id, "breakTime", Number(e.target.value))}
                                                     />
+                                                    <span>mins</span>
                                                 </div>
                                                 <div className="input-group">
                                                     <label>Cycles: </label>
-                                                    <input 
-                                                        type="number" 
-                                                        value={p.pomoCount} 
-                                                        readOnly={!isEditing} 
+                                                    <input
+                                                        type="number"
+                                                        value={p.pomoCount}
+                                                        readOnly={!isEditing}
                                                         onChange={(e) => handleEditInputChange(p.id, "pomoCount", Number(e.target.value))}
                                                     />
                                                 </div>
                                                 <div className="preset-buttons">
                                                     {isEditing ? (
                                                         <button className="save-button" onClick={() => handleUpdatePreset(p)}>
-                                                            <Save />
+                                                            <Save size={18} />
                                                         </button>
                                                     ) : (
                                                         <button className="edit-button" onClick={() => setEditingId(p.id)}>
-                                                            <Pen />
+                                                            <Pen size={18} />
                                                         </button>
                                                     )}
                                                     <button className='delete-button' onClick={() => handleDeletePreset(p.id)}>
-                                                        <Trash2 />
+                                                        <Trash2 size={18} />
                                                     </button>
                                                 </div>
                                             </div>
@@ -230,7 +266,39 @@ export function Header({ user, bgColor = "#121212" }: { user: any, bgColor?: str
                         </div>
                     ) : (
                         <div className="settings">
-                            <p>Settings coming soon...</p>
+                            <div className="setting">
+                                <label>How often should the motivational quote refresh? </label>
+                                <div className="ans">
+                                    <input 
+                                        type="number" 
+                                        value={refreshTime} 
+                                        onChange={(e) => handleSettingChange('refreshTime', Number(e.target.value))} 
+                                    />
+                                    <span>mins</span>
+                                </div>
+                            </div>
+                            <div className="setting">
+                                <label>Auto-start the break when the work timer hits zero? </label>
+                                <div className="options">
+                                    <button 
+                                        className={`yes-button ${isAutoStart ? "active-button" : ""}`} 
+                                        onClick={() => handleSettingChange('isAutoStart', true)}>Yes</button>
+                                    <button 
+                                        className={`no-button ${!isAutoStart ? "active-button" : ""}`} 
+                                        onClick={() => handleSettingChange('isAutoStart', false)}>No</button>
+                                </div>
+                            </div>
+                            <div className="setting">
+                                <label>Auto-resume the work session when the rest period ends? </label>
+                                <div className="options">
+                                    <button 
+                                        className={`yes-button ${isAutoResume ? "active-button" : ""}`} 
+                                        onClick={() => handleSettingChange('isAutoResume', true)}>Yes</button>
+                                    <button 
+                                        className={`no-button ${!isAutoResume ? "active-button" : ""}`} 
+                                        onClick={() => handleSettingChange('isAutoResume', false)}>No</button>
+                                </div>
+                            </div>
                         </div>
                     )}
                 </div>

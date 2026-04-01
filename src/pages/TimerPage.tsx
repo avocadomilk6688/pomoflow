@@ -1,15 +1,26 @@
 import './TimerPage.css';
 import { Pause, Play, SkipForward, Square, Music } from 'lucide-react';
 import { Header } from "./Header";
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { getAiAdvice } from '../utils/geminiApi';
 import { useNavigate } from 'react-router';
 import type { User } from 'firebase/auth';
 import { useAudio } from '../hooks/useAudio';
 
-export function TimerPage({ user, formData }: { user: User | null, formData: any }) {
+export function TimerPage({
+    user,
+    formData,
+    refreshTime,
+    isAutoStart,
+    isAutoResume
+}: {
+    user: User | null,
+    formData: any,
+    refreshTime: number,
+    isAutoStart: boolean,
+    isAutoResume: boolean
+}) {
     const navigate = useNavigate();
-
     const { playSound, stopSound } = useAudio();
 
     const [secondsLeft, setSecondsLeft] = useState(Number(formData.workTime * 60));
@@ -22,62 +33,75 @@ export function TimerPage({ user, formData }: { user: User | null, formData: any
         const fetchAi = async () => {
             try {
                 const data = await getAiAdvice(formData.task, isWorkMode);
-                setAiData(data);
-                if (isActive) {
-                    playSound(data.sound);
-                }
+                if (data) setAiData(data);
             } catch (e) { console.error(e); }
         };
+
         fetchAi();
-        const aiInterval = setInterval(fetchAi, 300000); // 5-minute refresh
+
+        const aiInterval = setInterval(fetchAi, refreshTime * 60 * 1000);
         return () => clearInterval(aiInterval);
-    }, [isWorkMode, formData.task]);
+    }, [isWorkMode, formData.task, refreshTime]);
 
     useEffect(() => {
-        if (isActive) {
+        if (isActive && aiData.sound) {
             playSound(aiData.sound);
         } else {
             stopSound();
         }
-    }, [isActive])
+        return () => stopSound();
+    }, [isActive, aiData.sound, playSound, stopSound]);
 
+    const handleSessionSwitch = useCallback(() => {
+        stopSound();
+
+        if (isWorkMode) {
+            setIsWorkMode(false);
+            setSecondsLeft(Number(formData.breakTime) * 60);
+
+            if (!isAutoStart) {
+                setIsActive(false);
+            }
+
+            setTimeout(() => {
+                alert("Focus session over! Time for a break.");
+            }, 100);
+
+        } else if (currentPomo < Number(formData.pomoCount)) {
+            setCurrentPomo(p => p + 1);
+            setIsWorkMode(true);
+            setSecondsLeft(Number(formData.workTime) * 60);
+
+            if (!isAutoResume) {
+                setIsActive(false);
+            }
+
+            setTimeout(() => {
+                alert("Break over! Back to work.");
+            }, 100);
+
+        } else {
+            setIsActive(false);
+            alert("All cycles complete! You're a legend.");
+            navigate('/');
+        }
+    }, [isWorkMode, currentPomo, formData, isAutoStart, isAutoResume, navigate, stopSound]);
     useEffect(() => {
         let interval: any = null;
 
-        if (isActive) {
+        if (isActive && secondsLeft > 0) {
             interval = setInterval(() => {
-                setSecondsLeft((prev) => {
-                    if (prev > 1) return prev - 1;
-
-                    setTimeout(() => {
-                        handleSessionSwitch();
-                    }, 10);
-
-                    return 0;
-                });
+                setSecondsLeft((prev) => prev - 1);
             }, 1000);
+        } else if (secondsLeft === 0 && isActive) {
+            const timeout = setTimeout(() => {
+                handleSessionSwitch();
+            }, 0);
+            return () => clearTimeout(timeout);
         }
 
-        const handleSessionSwitch = () => {
-            stopSound();
-            if (isWorkMode) {
-                alert("Focus session over! Time for a break.");
-                setIsWorkMode(false);
-                setSecondsLeft(Number(formData.breakTime) * 60);
-            } else if (currentPomo < Number(formData.pomoCount)) {
-                alert("Break over! Back to work.");
-                setCurrentPomo(p => p + 1);
-                setIsWorkMode(true);
-                setSecondsLeft(Number(formData.workTime) * 60);
-            } else {
-                setIsActive(false);
-                alert("All cycles complete! You're a legend.");
-                navigate('/');
-            }
-        };
-
         return () => clearInterval(interval);
-    }, [isActive, isWorkMode, currentPomo, formData, navigate]);
+    }, [isActive, secondsLeft, handleSessionSwitch]);
 
     const mins = Math.floor(secondsLeft / 60).toString().padStart(2, '0');
     const secs = (secondsLeft % 60).toString().padStart(2, '0');
@@ -88,7 +112,16 @@ export function TimerPage({ user, formData }: { user: User | null, formData: any
             transition: 'background-color 2s ease-in-out',
             minHeight: '100vh'
         }}>
-            <Header bgColor={aiData.color} user={user} />
+            <Header
+                bgColor={aiData.color}
+                user={user}
+                refreshTime={refreshTime}
+                isAutoStart={isAutoStart}
+                isAutoResume={isAutoResume}
+                setRefreshTime={() => { }}
+                setIsAutoStart={() => { }}
+                setIsAutoResume={() => { }}
+            />
             <div className="timer-section">
                 <h1>{formData.task || "PomoFlow Session"}</h1>
 
@@ -114,7 +147,9 @@ export function TimerPage({ user, formData }: { user: User | null, formData: any
                     <p className="motivation-quote">"{aiData.quote}"</p>
                 </div>
 
-                <button className="music-icon" onClick={() => isActive ? stopSound() : playSound(aiData.sound)}><Music /></button>
+                <button className="music-icon" onClick={() => isActive ? stopSound() : playSound(aiData.sound)}>
+                    <Music />
+                </button>
             </div>
         </div>
     );

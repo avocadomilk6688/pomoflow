@@ -5,7 +5,27 @@ import { Header } from "./Header"
 import type { User } from 'firebase/auth';
 import { fetchPresets } from '../utils/firestore';
 
-export function HomePage({ user, formData, setFormData }: { user: User | null, formData: any, setFormData: any }) {
+export function HomePage({ 
+    user, 
+    formData, 
+    setFormData,
+    refreshTime,
+    setRefreshTime,
+    isAutoStart,
+    setIsAutoStart,
+    isAutoResume,
+    setIsAutoResume 
+}: { 
+    user: User | null, 
+    formData: any, 
+    setFormData: any,
+    refreshTime: number,
+    setRefreshTime: any,
+    isAutoStart: boolean,
+    setIsAutoStart: any,
+    isAutoResume: boolean,
+    setIsAutoResume: any
+}) {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
     const [presets, setPresets] = useState<any[]>([]);
@@ -48,7 +68,16 @@ export function HomePage({ user, formData, setFormData }: { user: User | null, f
 
     return (
         <>
-            <Header bgColor="#121212" user={user} />
+            <Header 
+                bgColor="#121212" 
+                user={user} 
+                refreshTime={refreshTime}
+                setRefreshTime={setRefreshTime}
+                isAutoStart={isAutoStart}
+                setIsAutoStart={setIsAutoStart}
+                isAutoResume={isAutoResume}
+                setIsAutoResume={setIsAutoResume}
+            />
             <div className="home-page">
                 <h1>PomoFlow — An AI-powered Pomodoro timer designed to curate your atmosphere, generate motivation, and analyze your flow.</h1>
                 <div className="pomodoro-options">
