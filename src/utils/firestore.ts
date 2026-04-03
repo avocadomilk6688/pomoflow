@@ -61,3 +61,33 @@ export const fetchUserSettings = async (userId: string) => {
     const snap = await getDoc(settingsRef);
     return snap.exists() ? snap.data() : null;
 };
+
+export const fetchSessions = async (userId: string) => {
+    try {
+        const sessionRef = collection(db, "users", userId, "sessions")
+
+        const q = query(sessionRef, orderBy("date", "asc"))
+
+        const querySnapshot = await getDocs(q);
+
+        return querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+    } catch (error) {
+        console.log(error);
+        return [];
+    }
+}
+
+export const logSession = async (userId: string, data: any) => {
+    try {
+        const sessionRef = collection(db, "users", userId, "sessions");
+
+        const docRef = await addDoc(sessionRef, data);
+
+        console.log("Session logged with ID: ", docRef.id);
+    } catch (error) {
+        console.error(error);
+    }
+}

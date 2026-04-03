@@ -37,8 +37,14 @@
     position: relative;
 }
 
-.logout-box {
+.user-buttons {
     position: absolute;
+    top: 30px;
+    right: 0px;
+    z-index: 999;
+}
+
+.logout-box {
     width: 100px;
     height: 40px;
     background-color: white;
@@ -47,7 +53,16 @@
     text-align: center;
     line-height: 40px;
     cursor: pointer;
-    top: 30px;
-    right: 0px;
-    z-index: 999;
+    border-bottom: 1px solid #121212;
+}
+
+.analytics-box {
+    width: 100px;
+    height: 40px;
+    background-color: white;
+    color: black;
+    font-family: Inter;
+    text-align: center;
+    line-height: 40px;
+    cursor: pointer;
 }

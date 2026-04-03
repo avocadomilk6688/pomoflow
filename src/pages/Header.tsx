@@ -7,14 +7,15 @@ import { useState, useEffect } from 'react';
 import { fetchPresets, logPresets, deletePreset, updatePreset, updateUserSettings } from '../utils/firestore';
 import { PresetItem } from './PresetItem';
 import { SettingsTab } from './SettingsTab';
+import { useNavigate } from 'react-router';
 
 const GoogleButton = (GoogleButtonImport as any).default || GoogleButtonImport;
 
-export function Header({ 
-    user, bgColor = "#121212", refreshTime, setRefreshTime, 
+export function Header({
+    user, bgColor = "#121212", refreshTime, setRefreshTime,
     isAutoStart, setIsAutoStart, isAutoResume, setIsAutoResume
 }: any) {
-    const [isLogoutVisible, setIsLogoutVisible] = useState(false);
+    const [isUserButtonsVisible, setIsLogoutVisible] = useState(false);
     const [isMenuVisible, setIsMenuVisible] = useState(false);
     const [isPresetsVisible, setIsPresetsVisible] = useState(true);
     const [isAddPresetPressed, setIsAddPresetPressed] = useState(false);
@@ -22,6 +23,7 @@ export function Header({
     const [presets, setPresets] = useState<any[]>([]);
     const [editingId, setEditingId] = useState<string | null>(null);
     const [draftPreset, setDraftPreset] = useState({ name: "", workTime: 25, breakTime: 5, pomoCount: 4 });
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (isMenuVisible && isPresetsVisible && user?.uid) {
@@ -99,8 +101,12 @@ export function Header({
                 <div className="header-buttons">
                     <button className="menu-button" onClick={() => setIsMenuVisible(!isMenuVisible)}><Menu /></button>
                     <div className="user-container">
-                        <button className="user-button" onClick={() => setIsLogoutVisible(!isLogoutVisible)}><UserCircle /></button>
-                        {isLogoutVisible && <div className="logout-box" onClick={handleLogout}>Log out</div>}
+                        <button className="user-button" onClick={() => setIsLogoutVisible(!isUserButtonsVisible)}><UserCircle /></button>
+                        {isUserButtonsVisible && 
+                        <div className="user-buttons">
+                            <div className="logout-box" onClick={handleLogout}>Log out</div>
+                            <div className="analytics-box" onClick={() => navigate('/analytics')}>Analytics</div>
+                        </div>}
                     </div>
                 </div>
             )}
@@ -138,10 +144,10 @@ export function Header({
                                 <p className="loading-text">Loading your flow...</p>
                             ) : presets.length > 0 ? (
                                 presets.map((p) => (
-                                    <PresetItem 
-                                        key={p.id} preset={p} isEditing={editingId === p.id} 
-                                        onEdit={setEditingId} onChange={handleEditInputChange} 
-                                        onSave={handleUpdatePreset} onDelete={handleDeletePreset} 
+                                    <PresetItem
+                                        key={p.id} preset={p} isEditing={editingId === p.id}
+                                        onEdit={setEditingId} onChange={handleEditInputChange}
+                                        onSave={handleUpdatePreset} onDelete={handleDeletePreset}
                                     />
                                 ))
                             ) : (
@@ -149,9 +155,9 @@ export function Header({
                             )}
                         </div>
                     ) : (
-                        <SettingsTab 
-                            refreshTime={refreshTime} isAutoStart={isAutoStart} 
-                            isAutoResume={isAutoResume} onSettingChange={handleSettingChange} 
+                        <SettingsTab
+                            refreshTime={refreshTime} isAutoStart={isAutoStart}
+                            isAutoResume={isAutoResume} onSettingChange={handleSettingChange}
                         />
                     )}
                 </div>

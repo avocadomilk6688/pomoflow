@@ -1,0 +1,54 @@
+.analytics-container {
+    padding: 20px 40px;
+}
+
+.analytics-container h1 {
+    color: white;
+    font-family: monospace;
+    font-size: 30px;
+}
+
+.insight-range ul {
+    display: flex;
+    margin-top: 30px;
+    height: 40px;
+    width: 500px;
+    color: white;
+    list-style: none;
+    font-size: 18px;
+    font-family: Inter;
+    border: 1px solid white;
+    line-height: 40px;
+    overflow: hidden;
+}
+
+.insight-range ul li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    cursor: pointer;
+}
+
+.active {
+    background-color: white;
+    color: black
+}
+
+.analytics-content {
+    margin-top: 85px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.analytics-content .barchart {
+    height: 400px;
+    width: 800px;
+    background-color: white;
+}
+
+.analytics-content .ai-analyzer {
+    height: 400px;
+    width: 600px;
+    background-color: white;
+}

@@ -10,6 +10,7 @@ import { useAudio } from '../hooks/useAudio';
 import { TimerDisplay } from './TimerDisplay';
 import { TimerControls } from './TimerControls';
 import { AiInsight } from './AiInsight';
+import { logSession } from '../utils/firestore';
 
 export function TimerPage({
     user,
@@ -54,7 +55,7 @@ export function TimerPage({
         return () => stopSound();
     }, [isActive, aiData.sound, playSound, stopSound]);
 
-    const handleSessionSwitch = useCallback(() => {
+    const handleSessionSwitch = useCallback(async () => {
         stopSound();
         if (isWorkMode) {
             setIsWorkMode(false);
@@ -69,10 +70,28 @@ export function TimerPage({
             setTimeout(() => alert("Break over! Back to work."), 100);
         } else {
             setIsActive(false);
+            
+            if (user?.uid) {
+                const sessionData = {
+                    task: formData.task || "Unnamed Session",
+                    workTime: Number(formData.breakTime),
+                    breakTime: Number(formData.breakTime),
+                    pomoCount: Number(formData.pomoCount),
+                    totalFocusTime: Number(formData.workTime) * Number(formData.pomoCount),
+                    date: new Date().toISOString().split('T')[0], // "YYYY-MM-DD"
+                    timestamp: new Date()
+                };
+
+                try {
+                    await logSession(user.uid, sessionData);
+                    console.log("Flow session saved successfully!");
+                } catch (err) {
+                    console.error("Failed to save session:", err);
+                }
+            }
             alert("All cycles complete! You're a legend.");
-            navigate('/');
         }
-    }, [isWorkMode, currentPomo, formData, isAutoStart, isAutoResume, navigate, stopSound]);
+    }, [isWorkMode, currentPomo, formData, isAutoStart, isAutoResume, stopSound, user]);
 
     useEffect(() => {
         let interval: any = null;

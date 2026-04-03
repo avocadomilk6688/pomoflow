@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router';
 import { HomePage } from './pages/HomePage';
 import { TimerPage } from './pages/TimerPage';
+import { AnalyticsPage } from './pages/AnalyticsPage'; 
 import { useState, useEffect } from 'react';
 import { auth } from './firebase';
 import { onAuthStateChanged, type User } from 'firebase/auth';
@@ -9,20 +10,13 @@ import { fetchUserSettings } from './utils/firestore';
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
-
   const [refreshTime, setRefreshTime] = useState(5);
   const [isAutoStart, setIsAutoStart] = useState(true);
   const [isAutoResume, setIsAutoResume] = useState(true);
 
   const [formData, setFormData] = useState(() => {
     const saved = localStorage.getItem('pomoflow_settings');
-    return saved ? JSON.parse(saved) : {
-      preset: 'coding',
-      task: '',
-      workTime: 25,
-      breakTime: 5,
-      pomoCount: 1
-    };
+    return saved ? JSON.parse(saved) : { preset: 'coding', task: '', workTime: 25, breakTime: 5, pomoCount: 1 };
   });
 
   useEffect(() => {
@@ -45,34 +39,9 @@ function App() {
 
   return (
     <Routes>
-      <Route 
-        index 
-        element={
-          <HomePage 
-            user={user} 
-            formData={formData} 
-            setFormData={setFormData} 
-            refreshTime={refreshTime}
-            setRefreshTime={setRefreshTime}
-            isAutoStart={isAutoStart}
-            setIsAutoStart={setIsAutoStart}
-            isAutoResume={isAutoResume}
-            setIsAutoResume={setIsAutoResume}
-          />
-        } 
-      />
-      <Route 
-        path="timer" 
-        element={
-          <TimerPage 
-            user={user} 
-            formData={formData} 
-            refreshTime={refreshTime}
-            isAutoStart={isAutoStart}
-            isAutoResume={isAutoResume}
-          />
-        } 
-      />
+      <Route index element={<HomePage user={user} formData={formData} setFormData={setFormData} refreshTime={refreshTime} setRefreshTime={setRefreshTime} isAutoStart={isAutoStart} setIsAutoStart={setIsAutoStart} isAutoResume={isAutoResume} setIsAutoResume={setIsAutoResume} />} />
+      <Route path="timer" element={<TimerPage user={user} formData={formData} refreshTime={refreshTime} isAutoStart={isAutoStart} isAutoResume={isAutoResume} />} />
+      <Route path="analytics" element={<AnalyticsPage user={user} />} />
     </Routes>
   );
 }
