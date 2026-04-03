@@ -88,7 +88,9 @@ export function Header({
     const handleLogout = async () => {
         await logout();
         setIsLogoutVisible(false);
+        setIsMenuVisible(false);
         setPresets([]);
+        navigate('/');
     };
 
     return (

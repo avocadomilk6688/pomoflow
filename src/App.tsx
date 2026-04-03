@@ -41,7 +41,7 @@ function App() {
     <Routes>
       <Route index element={<HomePage user={user} formData={formData} setFormData={setFormData} refreshTime={refreshTime} setRefreshTime={setRefreshTime} isAutoStart={isAutoStart} setIsAutoStart={setIsAutoStart} isAutoResume={isAutoResume} setIsAutoResume={setIsAutoResume} />} />
       <Route path="timer" element={<TimerPage user={user} formData={formData} refreshTime={refreshTime} isAutoStart={isAutoStart} isAutoResume={isAutoResume} />} />
-      <Route path="analytics" element={<AnalyticsPage user={user} />} />
+      <Route path="analytics" element={<AnalyticsPage user={user} refreshTime={refreshTime} setRefreshTime={setRefreshTime} isAutoStart={isAutoStart} setIsAutoStart={setIsAutoStart} isAutoResume={isAutoResume} setIsAutoResume={setIsAutoResume} />} />
     </Routes>
   );
 }
