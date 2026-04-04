@@ -93,6 +93,10 @@ input:focus {
     width: 50px;
 }
 
+.no-of-pomodoros input {
+    width: 89px;
+}
+
 .start-button {
     margin-top: 58px;
     align-self: center;

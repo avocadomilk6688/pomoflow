@@ -2,7 +2,7 @@ import './TimerPage.css';
 import { Music } from 'lucide-react';
 import { Header } from "./Header";
 import { useEffect, useState, useCallback } from 'react';
-import { getAiAdvice } from '../utils/geminiApi';
+import { getSessionVibe, getQuoteRefresh } from '../utils/geminiApi';
 import { useNavigate } from 'react-router';
 import type { User } from 'firebase/auth';
 import { useAudio } from '../hooks/useAudio';
@@ -35,14 +35,27 @@ export function TimerPage({
     const [aiData, setAiData] = useState({ quote: "Architecting focus...", color: "#1e1e2e", sound: 'Rain' });
 
     useEffect(() => {
-        const fetchAi = async () => {
+        const fetchVibe = async () => {
             try {
-                const data = await getAiAdvice(formData.task, isWorkMode);
+                const data = await getSessionVibe(formData.task, isWorkMode);
                 if (data) setAiData(data);
             } catch (e) { console.error(e); }
         };
-        fetchAi();
-        const aiInterval = setInterval(fetchAi, refreshTime * 60 * 1000);
+        fetchVibe();
+    }, [isWorkMode, formData.task]);
+
+    useEffect(() => {
+        if (!refreshTime) return;
+        const fetchQuote = async () => {
+            try {
+                const quote = await getQuoteRefresh(formData.task, isWorkMode);
+                if (quote) {
+                    setAiData(prev => ({ ...prev, quote }));
+                }
+            } catch (e) { console.error(e); }
+        };
+
+        const aiInterval = setInterval(fetchQuote, refreshTime * 60 * 1000);
         return () => clearInterval(aiInterval);
     }, [isWorkMode, formData.task, refreshTime]);
 
@@ -52,7 +65,6 @@ export function TimerPage({
         } else {
             stopSound();
         }
-        return () => stopSound();
     }, [isActive, aiData.sound, playSound, stopSound]);
 
     const handleSessionSwitch = useCallback(async () => {
@@ -74,24 +86,24 @@ export function TimerPage({
             if (user?.uid) {
                 const sessionData = {
                     task: formData.task || "Unnamed Session",
-                    workTime: Number(formData.breakTime),
+                    workTime: Number(formData.workTime),
                     breakTime: Number(formData.breakTime),
                     pomoCount: Number(formData.pomoCount),
                     totalFocusTime: Number(formData.workTime) * Number(formData.pomoCount),
-                    date: new Date().toISOString().split('T')[0], // "YYYY-MM-DD"
+                    date: new Date().toISOString().split('T')[0],
                     timestamp: new Date()
                 };
 
                 try {
                     await logSession(user.uid, sessionData);
-                    console.log("Flow session saved successfully!");
                 } catch (err) {
-                    console.error("Failed to save session:", err);
+                    console.error(err);
                 }
             }
             alert("All cycles complete! You're a legend.");
+            navigate('/analytics');
         }
-    }, [isWorkMode, currentPomo, formData, isAutoStart, isAutoResume, stopSound, user]);
+    }, [isWorkMode, currentPomo, formData, isAutoStart, isAutoResume, stopSound, user, navigate]);
 
     useEffect(() => {
         let interval: any = null;

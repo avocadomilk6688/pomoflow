@@ -54,6 +54,7 @@ export const updatePreset = async (userId: string, presetId: string, updatedData
 export const updateUserSettings = async (userId: string, settings: any) => {
     const settingsRef = doc(db, "users", userId, "settings", "timerConfig");
     await setDoc(settingsRef, settings, { merge: true });
+    console.log("Setting changed");
 };
 
 export const fetchUserSettings = async (userId: string) => {
