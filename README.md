@@ -2,6 +2,8 @@
 
 **An AI-powered Pomodoro timer designed to curate your atmosphere, generate motivation, and analyze your flow.**
 
+🔗 **[Live Demo](https://pomoflow-tazt.vercel.app/)**
+
 PomoFlow is a focus companion that bridges the gap between productivity and environmental design. Utilizing the **Gemini AI API**, it dynamically evolves the app's aesthetic—colors, sounds, and quotes—to match the specific energy of your task.
 
 ## ---
