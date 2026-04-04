@@ -67,6 +67,38 @@ export function TimerPage({
         }
     }, [isActive, aiData.sound, playSound, stopSound]);
 
+    const handleStopEarly = async () => {
+        if (!window.confirm("Stop session and save progress?")) return;
+
+        if (user?.uid) {
+            const completedPomosTime = (currentPomo - 1) * Number(formData.workTime);
+            let currentSessionTime = 0;
+
+            if (isWorkMode) {
+                const elapsedSeconds = (Number(formData.workTime) * 60) - secondsLeft;
+                currentSessionTime = elapsedSeconds / 60;
+            } else {
+                currentSessionTime = Number(formData.workTime);
+            }
+
+            const totalTime = Math.round(completedPomosTime + currentSessionTime);
+
+            if (totalTime >= 1) {
+                await logSession(user.uid, {
+                    task: formData.task || "Partial Session",
+                    workTime: Number(formData.workTime),
+                    breakTime: Number(formData.breakTime),
+                    pomoCount: currentPomo,
+                    totalFocusTime: totalTime,
+                    date: new Date().toISOString().split('T')[0],
+                    timestamp: new Date()
+                });
+            }
+        }
+        stopSound();
+        navigate('/');
+    };
+
     const handleSessionSwitch = useCallback(async () => {
         stopSound();
         if (isWorkMode) {
@@ -82,10 +114,9 @@ export function TimerPage({
             setTimeout(() => alert("Break over! Back to work."), 100);
         } else {
             setIsActive(false);
-            
             if (user?.uid) {
                 const sessionData = {
-                    task: formData.task || "Unnamed Session",
+                    task: formData.task || "Completed Session",
                     workTime: Number(formData.workTime),
                     breakTime: Number(formData.breakTime),
                     pomoCount: Number(formData.pomoCount),
@@ -93,12 +124,9 @@ export function TimerPage({
                     date: new Date().toISOString().split('T')[0],
                     timestamp: new Date()
                 };
-
                 try {
                     await logSession(user.uid, sessionData);
-                } catch (err) {
-                    console.error(err);
-                }
+                } catch (err) { console.error(err); }
             }
             alert("All cycles complete! You're a legend.");
             navigate('/analytics');
@@ -145,7 +173,7 @@ export function TimerPage({
                     isActive={isActive}
                     onToggleActive={() => setIsActive(!isActive)}
                     onSkip={() => window.confirm("Skip session?") && setSecondsLeft(0)}
-                    onStop={() => window.confirm("Stop and go home?") && navigate('/')}
+                    onStop={handleStopEarly} 
                 />
 
                 <AiInsight quote={aiData.quote} />
