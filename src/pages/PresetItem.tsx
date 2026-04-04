@@ -10,6 +10,11 @@ interface PresetItemProps {
 }
 
 export function PresetItem({ preset, isEditing, onEdit, onChange, onSave, onDelete }: PresetItemProps) {
+    const handleNumberChange = (id: string, field: string, value: string) => {
+        const numericValue = value === "" ? 0 : Number(value);
+        onChange(id, field, numericValue);
+    };
+
     return (
         <div className="preset">
             <input
@@ -24,9 +29,10 @@ export function PresetItem({ preset, isEditing, onEdit, onChange, onSave, onDele
                     <label>Work: </label>
                     <input
                         type="number"
-                        value={preset.workTime}
+                        value={preset.workTime === 0 ? "" : preset.workTime}
                         readOnly={!isEditing}
-                        onChange={(e) => onChange(preset.id, "workTime", Number(e.target.value))}
+                        placeholder="0"
+                        onChange={(e) => handleNumberChange(preset.id, "workTime", e.target.value)}
                     />
                     <span>mins</span>
                 </div>
@@ -34,9 +40,10 @@ export function PresetItem({ preset, isEditing, onEdit, onChange, onSave, onDele
                     <label>Break: </label>
                     <input
                         type="number"
-                        value={preset.breakTime}
+                        value={preset.breakTime === 0 ? "" : preset.breakTime}
                         readOnly={!isEditing}
-                        onChange={(e) => onChange(preset.id, "breakTime", Number(e.target.value))}
+                        placeholder="0"
+                        onChange={(e) => handleNumberChange(preset.id, "breakTime", e.target.value)}
                     />
                     <span>mins</span>
                 </div>
@@ -44,9 +51,10 @@ export function PresetItem({ preset, isEditing, onEdit, onChange, onSave, onDele
                     <label>Cycles: </label>
                     <input
                         type="number"
-                        value={preset.pomoCount}
+                        value={preset.pomoCount === 0 ? "" : preset.pomoCount}
                         readOnly={!isEditing}
-                        onChange={(e) => onChange(preset.id, "pomoCount", Number(e.target.value))}
+                        placeholder="0"
+                        onChange={(e) => handleNumberChange(preset.id, "pomoCount", e.target.value)}
                     />
                 </div>
                 <div className="preset-buttons">
