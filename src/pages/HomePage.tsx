@@ -5,6 +5,8 @@ import { Header } from "./Header";
 import type { User } from 'firebase/auth';
 import { fetchPresets } from '../utils/firestore';
 
+// --- Components ---
+
 function TimerInput({ label, name, value, onChange, unit, className }: {
     label: string,
     name: string,
@@ -24,24 +26,41 @@ function TimerInput({ label, name, value, onChange, unit, className }: {
     );
 }
 
-function PresetSelector({ user, presets, value, onChange }: {
+function PresetSelector({ user, presets, value, onChange, isLoading }: {
     user: User | null,
     presets: any[],
     value: string,
-    onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void
+    onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void,
+    isLoading: boolean
 }) {
     if (!user) {
         return <h3>Sign in to create and manage your own custom session presets.</h3>;
     }
 
     return (
-        <select className="presets" name="preset" id="presets" value={value} onChange={onChange}>
-            {presets.map((p) => (
-                <option key={p.id} value={p.id}>{p.name}</option>
-            ))}
+        <select 
+            className="presets" 
+            name="preset" 
+            id="presets" 
+            value={value} 
+            onChange={onChange}
+            disabled={isLoading}
+        >
+            {isLoading ? (
+                <option>Loading your presets...</option>
+            ) : (
+                <>
+                    <option value="">Select a preset (Optional)</option>
+                    {presets.map((p) => (
+                        <option key={p.id} value={p.id}>{p.name}</option>
+                    ))}
+                </>
+            )}
         </select>
     );
 }
+
+// --- Main Page ---
 
 export function HomePage({
     user,
@@ -96,9 +115,14 @@ export function HomePage({
         if (user?.uid) {
             const getPresets = async () => {
                 setIsLoading(true);
-                const data = await fetchPresets(user.uid);
-                setPresets(data);
-                setIsLoading(false);
+                try {
+                    const data = await fetchPresets(user.uid);
+                    setPresets(data);
+                } catch (error) {
+                    console.error("Error loading presets:", error);
+                } finally {
+                    setIsLoading(false);
+                }
             };
             getPresets();
         }
@@ -126,11 +150,18 @@ export function HomePage({
                         presets={presets} 
                         value={formData.preset} 
                         onChange={handleChange} 
+                        isLoading={isLoading}
                     />
 
                     <div className="working-on">
                         <p>What are you working on?</p>
-                        <input type="text" name="task" value={formData.task} onChange={handleChange} />
+                        <input 
+                            type="text" 
+                            name="task" 
+                            placeholder="e.g. Studying Machine Learning" 
+                            value={formData.task} 
+                            onChange={handleChange} 
+                        />
                     </div>
 
                     <TimerInput 
@@ -156,8 +187,12 @@ export function HomePage({
                         <input type="number" name="pomoCount" value={formData.pomoCount} onChange={handleChange} />
                     </div>
 
-                    <button className="start-button" onClick={() => navigate('/timer')}>
-                        Start
+                    <button 
+                        className="start-button" 
+                        onClick={() => navigate('/timer')}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? "Syncing..." : "Start"}
                     </button>
                 </div>
             </div>
