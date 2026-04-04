@@ -95,7 +95,7 @@ export function Header({
 
     return (
         <div className="header" style={{ backgroundColor: bgColor, transition: 'background-color 2.5s ease-in-out' }}>
-            <h2>PomoFlow</h2>
+            <h2 onClick={() => navigate('/')}>PomoFlow</h2>
 
             {!user ? (
                 <GoogleButton type="light" onClick={loginWithGoogle} />
@@ -106,8 +106,8 @@ export function Header({
                         <button className="user-button" onClick={() => setIsLogoutVisible(!isUserButtonsVisible)}><UserCircle /></button>
                         {isUserButtonsVisible && 
                         <div className="user-buttons">
-                            <div className="logout-box" onClick={handleLogout}>Log out</div>
                             <div className="analytics-box" onClick={() => navigate('/analytics')}>Analytics</div>
+                            <div className="logout-box" onClick={handleLogout}>Log out</div>
                         </div>}
                     </div>
                 </div>
