@@ -1,24 +1,30 @@
 .analytics-container {
-    padding: 20px 40px;
+    padding: 20px clamp(15px, 5vw, 40px);
+    box-sizing: border-box;
+    min-height: 100vh;
+    background-color: #121212;
 }
 
 .analytics-container h1 {
     color: white;
     font-family: monospace;
-    font-size: 30px;
+    font-size: clamp(24px, 5vw, 30px);
+    margin: 0;
 }
 
 .insight-range ul {
     display: flex;
     margin-top: 30px;
     height: 40px;
-    width: 500px;
+    width: 100%;
+    max-width: 500px;
     color: white;
     list-style: none;
-    font-size: 18px;
+    font-size: clamp(14px, 2vw, 18px);
     font-family: Inter;
     border: 1px solid white;
-    line-height: 40px;
+    padding: 0;
+    box-sizing: border-box;
     overflow: hidden;
 }
 
@@ -28,21 +34,57 @@
     justify-content: center;
     flex: 1;
     cursor: pointer;
+    text-align: center;
+    transition: background-color 0.2s ease;
 }
 
 .active {
     background-color: white;
-    color: black
+    color: black;
 }
 
 .analytics-content {
-    margin-top: 85px;
+    margin-top: clamp(40px, 8vh, 85px);
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
 }
 
 .analytics-content .barchart {
-    height: 400px;
-    width: 900px;
+    height: clamp(300px, 50vh, 400px);
+    width: 100%;
+    max-width: 900px;
     background-color: white;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+@media (max-width: 600px) {
+    .analytics-container {
+        text-align: center;
+    }
+    
+    .analytics-container h1 {
+        text-align: left;
+    }
+
+    .insight-range ul {
+        height: auto;
+        flex-wrap: wrap;
+        border: none;
+        gap: 5px;
+    }
+
+    .insight-range ul li {
+        border: 1px solid white;
+        height: 35px;
+        min-width: 70px;
+        flex: unset;
+        padding: 0 10px;
+    }
+
+    .analytics-content {
+        margin-top: 40px;
+    }
 }
