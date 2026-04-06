@@ -35,33 +35,37 @@ PomoFlow is a focus companion that bridges the gap between productivity and envi
 
 ### **1\. Clone the repository**
 
-Bash
+```bash
 
 git clone https://github.com/your-username/pomoflow.git  
 cd pomoflow
+```
 
 ### **2\. Install dependencies**
 
-Bash
+```bash
 
 npm install
+```
 
 ### **3\. Set up Environment Variables**
 
 Create a .env file in the root directory and add your API keys:
 
-Code snippet
+```bash
 
 VITE\_FIREBASE\_API\_KEY=your\_key  
 VITE\_FIREBASE\_AUTH\_DOMAIN=your\_domain  
 VITE\_FIREBASE\_PROJECT\_ID=your\_id  
 VITE\_GEMINI\_API\_KEY=your\_gemini\_key
+```
 
 ### **4\. Run locally**
 
-Bash
+```bash
 
 npm run dev
+```
 
 ## ---
 
