@@ -13,8 +13,9 @@ export function SettingsTab({ refreshTime, isAutoStart, isAutoResume, onSettingC
                 <div className="ans">
                     <input 
                         type="number" 
-                        value={refreshTime} 
-                        onChange={(e) => onSettingChange('refreshTime', Number(e.target.value))} 
+                        value={refreshTime === 0 ? "" : refreshTime} 
+                        placeholder="0"
+                        onChange={(e) => onSettingChange('refreshTime', e.target.value === "" ? 0 : Number(e.target.value))} 
                     />
                     <span>mins</span>
                 </div>
