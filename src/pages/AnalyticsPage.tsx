@@ -62,7 +62,7 @@ export function AnalyticsPage({
                 <div className="analytics-content">
                     <div className="barchart">
                         <ResponsiveContainer width="100%" height={400}>
-                            <BarChart data={chartData} margin={{ top: 40, right: 30, left: 0, bottom: 10 }}>
+                            <BarChart data={chartData} margin={{ top: 40, right: 30, left: 0, bottom: 40 }}>
                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#333" />
                                 <XAxis
                                     dataKey="label"
