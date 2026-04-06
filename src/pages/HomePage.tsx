@@ -60,8 +60,6 @@ function PresetSelector({ user, presets, value, onChange, isLoading }: {
     );
 }
 
-// --- Main Page ---
-
 export function HomePage({
     user,
     formData,

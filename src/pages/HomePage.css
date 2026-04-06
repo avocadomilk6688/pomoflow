@@ -3,45 +3,55 @@
     color: white;
     text-align: center;
     min-height: 100vh;
+    padding: 0 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .home-page h1 {
-    margin: 10px 100px;
+    margin: 20px auto;
     font-family: monospace;
-    font-size: 30px;
-    line-height: 50px;
+    font-size: clamp(20px, 4vw, 30px);
+    line-height: 1.4;
+    max-width: 800px;
 }
 
 .pomodoro-options {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    margin: 0px auto;
-    padding: 30px 48px;
+    margin: 0px auto 40px auto;
+    padding: clamp(20px, 5vw, 48px);
     border: 1px solid white;
-    width: 893px;
-    height: 500px;
+    width: 100%;
+    max-width: 893px;
+    min-height: 500px;
+    box-sizing: border-box;
 }
 
 .pomodoro-options .presets {
     padding-left: 8px;
     height: 40px;
-    width: 150px;
-    font-size: 18px;
+    width: 100%;
+    max-width: 200px;
+    font-size: clamp(16px, 2vw, 18px);
     background-color: #121212;
     color: white;
+    border: 1px solid white;
 }
 
 .pomodoro-options h3 {
     font-family: Inter;
+    font-size: clamp(16px, 2vw, 18px);
 }
 
 p {
-    font-size: 18px;
+    font-size: clamp(16px, 2vw, 18px);
     font-family: Roboto;
 }
 
-/* Remove the arrow of number type input */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -53,7 +63,7 @@ input {
     color: white;
     border: none;
     border-bottom: 1px solid white;
-    font-size: 18px;
+    font-size: clamp(16px, 2vw, 18px);
 }
 
 input:focus {
@@ -63,13 +73,14 @@ input:focus {
 
 .working-on {
     margin-top: 30px;
-    width: 797px;
+    width: 100%;
     text-align: left;
 }
 
 .working-on input {
     margin-top: 20px;
-    width: 797px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .minutes-per-focus-session,
@@ -77,32 +88,37 @@ input:focus {
 .no-of-pomodoros {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin-top: 30px;
-    width: 797px;
+    width: 100%;
     text-align: left;
+    gap: 15px;
 }
 
 .minutes-per-focus-session .ans,
 .minutes-per-break .ans {
     display: flex;
+    align-items: center;
 }
-
 
 .minutes-per-focus-session .ans input,
 .minutes-per-break .ans input {
     width: 50px;
+    text-align: center;
 }
 
 .no-of-pomodoros input {
-    width: 89px;
+    width: 60px;
+    text-align: center;
 }
 
 .start-button {
     margin-top: 58px;
     align-self: center;
-    width: 200px;
-    height: 70px;
-    font-size: 18px;
+    width: 100%;
+    max-width: 200px;
+    min-height: 70px;
+    font-size: clamp(16px, 2vw, 18px);
     background-color: #121212;
     color: white;
     border: 1px solid white;
@@ -113,4 +129,29 @@ input:focus {
 .start-button:hover {
     background-color: white;
     color: black;
+}
+
+@media (max-width: 600px) {
+    .home-page h1 {
+        line-height: 1.2;
+    }
+
+    .pomodoro-options {
+        padding: 20px;
+        border: none;
+    }
+
+    .minutes-per-focus-session,
+    .minutes-per-break,
+    .no-of-pomodoros {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .minutes-per-focus-session .ans,
+    .minutes-per-break .ans,
+    .no-of-pomodoros input {
+        margin-top: 5px;
+    }
 }
