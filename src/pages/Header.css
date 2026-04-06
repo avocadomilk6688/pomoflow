@@ -1,35 +1,43 @@
 .header {
     display: flex;
     position: relative;
-    padding: 14px 40px;
+    padding: 0 clamp(15px, 5vw, 40px);
     justify-content: space-between;
     align-items: center;
-    height: 100px;
+    height: clamp(60px, 10vh, 100px);
     background-color: #121212;
     color: white;
     border-bottom: 1px solid white;
+    box-sizing: border-box;
 }
 
 .header h2 {
     font-family: Montserrat;
-    font-size: 40px;
+    font-size: clamp(24px, 5vw, 40px);
     font-weight: bold;
     cursor: pointer;
+    margin: 0;
 }
 
 .header-buttons {
     display: flex;
-    gap: 15px;
+    gap: clamp(10px, 2vw, 15px);
+    align-items: center;
 }
 
 .header-buttons button {
     background: none;
     border: none;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 5px;
 }
 
 .header-buttons button svg {
     color: white;
+    width: clamp(24px, 4vw, 32px);
+    height: clamp(24px, 4vw, 32px);
 }
 
 .user-container {
@@ -40,13 +48,14 @@
 
 .user-buttons {
     position: absolute;
-    top: 30px;
+    top: clamp(40px, 6vh, 50px);
     right: 0px;
     z-index: 999;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
-.logout-box {
-    width: 100px;
+.logout-box, .analytics-box {
+    width: clamp(100px, 15vw, 120px);
     height: 40px;
     background-color: white;
     color: black;
@@ -54,16 +63,15 @@
     text-align: center;
     line-height: 40px;
     cursor: pointer;
+    font-size: clamp(14px, 1.5vw, 16px);
 }
 
 .analytics-box {
-    width: 100px;
-    height: 40px;
-    background-color: white;
-    color: black;
-    font-family: Inter;
-    text-align: center;
-    line-height: 40px;
-    cursor: pointer;
     border-bottom: 1px solid #121212;
+}
+
+@media (max-width: 480px) {
+    .header {
+        height: 70px;
+    }
 }
