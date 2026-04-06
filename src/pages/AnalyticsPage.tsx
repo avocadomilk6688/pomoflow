@@ -68,6 +68,7 @@ export function AnalyticsPage({
                                     dataKey="label"
                                     stroke="#121212"
                                     fontSize={12}
+                                    fontFamily="Inter"
                                     tickLine={false}
                                     axisLine={false}
                                     interval={activeRange === "Monthly" ? 4 : 0}
@@ -91,7 +92,7 @@ export function AnalyticsPage({
                                     cursor={{ fill: 'rgba(0, 0, 0, 0.05)' }}
                                     contentStyle={{
                                         backgroundColor: '#fff',
-                                        border: 'none',
+                                        border: '1px solid #121212',
                                         borderRadius: '8px',
                                         boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
                                     }}
